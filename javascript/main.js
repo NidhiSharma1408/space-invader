@@ -1,5 +1,5 @@
 var hero = {
-    left: 0,
+    left: 10,
     top: 288
 }
 function drawHero(){
