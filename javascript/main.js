@@ -5,7 +5,43 @@ var ship = {
 };
 
 var weapons = [];
+var enemies = [];
+//constructor for creating enemies
+function updateEnemy() {
+    document.getElementById("enemies").innerHTML = "";
+    var i;
+    for (i = 0;i< enemies.length; i++){
+        document.getElementById("enemies").innerHTML +=
+        "<div class='enemy' style='left:" + 
+        enemies[i].left + 
+        "px; top:" +
+        enemies[i].top +
+        "px;'></div>";
+    }
+}
 
+function moveEnemy() {
+    var i;
+    for( i =0; i< enemies.length; i++) {
+        if(enemies[i].left >= -50){
+          enemies[i].left -= 3;
+        }   
+    }
+}
+
+function createEnemy() {
+    var l= document.documentElement.clientWidth - 50;
+    var t= 60;
+    for(i =1 ;i<=24 ;i++){
+      enemies.push({ left: l, top: t});
+      t+=90;
+      if( t>= document.documentElement.clientHeight - 60)
+      {
+          t=60;
+          l+=70;
+      }
+    }
+}
 //constructor for creating bullets
 function updateWeapon() {
   document.getElementById("weapons").innerHTML = "";
@@ -81,8 +117,11 @@ function move(e) {
 }
 
 function loop() {
-  setTimeout(loop, 70);
+  setTimeout(loop, 100);
   moveWeapon();
   updateWeapon();
+  moveEnemy();
+  updateEnemy();
 }
 loop();
+createEnemy();
