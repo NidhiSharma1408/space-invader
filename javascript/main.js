@@ -1,4 +1,4 @@
-//Hero object
+//ship object
 var ship = {
   left: 0,
   top: 288,
@@ -84,5 +84,24 @@ function loop() {
   setTimeout(loop, 70);
   moveWeapon();
   updateWeapon();
+  collideWithOwnBullet();
 }
 loop();
+
+var lives = 3;
+function collideWithOwnBullet() {
+  for (var i = 0; i < weapons.length; i++) {
+    if (
+      ship.left + 9 >= weapons[i].left &&
+      ship.left <= weapons[i].left &&
+      ship.top >= weapons[i].top - 10
+    ) {
+      weapons[i] = "";
+      lives--;
+      document.getElementById("lives").innerHTML = "LIVES: " + lives;
+      if (lives == 0) {
+        document.getElementById("end").style.display = "block";
+      }
+    }
+  }
+}

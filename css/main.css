@@ -11,6 +11,24 @@
   background-size: cover;
   position: relative;
 }
+#lives {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ffffff;
+  font-size: 2rem;
+  margin: 10px;
+}
+#end {
+  display: none;
+  position: absolute;
+  top: 220px;
+  left: 288px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 8rem;
+  z-index: 2;
+}
 #hero-place {
   width: 60px;
   height: 100%;
@@ -24,6 +42,7 @@
   position: absolute;
   left: 10px;
   top: 288px;
+  z-index: 1;
 }
 #weapons {
   height: 100vh;
@@ -34,12 +53,21 @@
 .weapon {
   background-image: url("../images/missile1.png");
   transform: rotate(90deg);
+  animation: rotation 1s infinite linear;
   background-repeat: no-repeat;
   width: 7px;
-  height: 60px;
+  height: 30px;
   position: absolute;
 }
 
+@keyframes rotation {
+  25% {
+    transform: rotate(45deg);
+  }
+  50% {
+    transform: rotate(135deg);
+  }
+}
 #enemies {
   width: 100vw;
   height: 100vh;
