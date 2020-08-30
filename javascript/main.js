@@ -1,47 +1,88 @@
-var hero = {
-    left: 0,
-    top: 288
+//Hero object
+var ship = {
+  left: 0,
+  top: 288,
+};
+
+var weapons = [];
+
+//constructor for creating bullets
+function updateWeapon() {
+  document.getElementById("weapons").innerHTML = "";
+  var i;
+  for (i = 0; i < weapons.length; i++) {
+    document.getElementById("weapons").innerHTML +=
+      "<div class='weapon' style='left:" +
+      weapons[i].left +
+      "px; top:" +
+      weapons[i].top +
+      "px;'></div>";
+  }
 }
-function drawHero(){
-    document.getElementById('hero').style.left = hero.left + 'px';
-    document.getElementById('hero').style.top = hero.top + 'px';
+
+function moveWeapon() {
+  var i;
+  for (i = 0; i < weapons.length; i++) {
+    weapons[i].left += 10;
+  }
 }
-document.onkeydown = function(e) {
-    if (e.keyCode === 37) {
-        // Left
-        if(hero.left <= 10){
-            console.log("cant move futher left");
-        }
-        else{
-            hero.left = hero.left - 10;
-        }
-    }
-    if (e.keyCode === 39) {
-        //Right
-        if(hero.left >= document.documentElement.clientWidth-60){
-            console.log("cant move further right")
-        }
-        else{
-            hero.left = hero.left + 10;
-       } 
-    }
-    if(e.keyCode === 38){
-        //up
-        if(hero.top <= 10){
-            console.log("cant move upward");
-        }
-        else{
-            hero.top = hero.top - 10;
-        } 
-    }
-    if(e.keyCode === 40){
-        //down 
-        if(hero.top >= document.documentElement.clientHeight-60){
-            console.log("cant move downward");
-        }
-        else{
-            hero.top = hero.top + 10; 
-        }
-    }
-    drawHero();   
+
+//updating ship
+function updateShip() {
+  document.getElementById("ship").style.left = ship.left + "px";
+  document.getElementById("ship").style.top = ship.top + "px";
 }
+
+document.addEventListener("keydown", move);
+
+function move(e) {
+  switch (e.keyCode) {
+    case 37:
+      if (ship.left <= 10) {
+        console.log("can't move futher left");
+      } else {
+        ship.left -= 10;
+      }
+      updateShip();
+      break;
+
+    case 39:
+      if (ship.left >= document.documentElement.clientWidth - 60) {
+        console.log("can't move further right");
+      } else {
+        ship.left += 10;
+      }
+      updateShip();
+      break;
+
+    case 38:
+      if (ship.top <= 10) {
+        console.log("can't move upward");
+      } else {
+        ship.top -= 10;
+      }
+      updateShip();
+      break;
+
+    case 40:
+      if (ship.top >= document.documentElement.clientHeight - 60) {
+        console.log("can't move downward");
+      } else {
+        ship.top += 10;
+      }
+      updateShip();
+      break;
+
+    case 32:
+      weapons.push({ left: ship.left, top: ship.top });
+      updateWeapon();
+      break;
+  }
+}
+
+function loop() {
+  setTimeout(loop, 70);
+  moveWeapon();
+  updateWeapon();
+}
+loop();
