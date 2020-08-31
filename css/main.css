@@ -4,6 +4,43 @@
   padding: 0;
   overflow: hidden;
 }
+
+#menu_bg {
+  background-image: url("../images/bg1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#container {
+  position: absolute;
+  top: 15%;
+  left: 25%;
+  width: 50vw;
+  height: 70vh;
+  border: 2px double #ffffff;
+}
+
+#title {
+  font-size: 4.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+ul {
+  margin-top: 150px;
+  list-style-image: url("../images/hero.png");
+}
+
+ul li {
+  font-size: 3rem;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 #background {
   height: 100vh;
   width: 100vw;
@@ -11,6 +48,20 @@
   background-size: cover;
   position: relative;
 }
+
+#status {
+  display: flex;
+  font-size: 2rem;
+  color: #000000;
+  margin: 10px;
+  z-index: -3;
+}
+
+#lives,
+#score {
+  padding: 5px;
+}
+
 #hero-place {
   width: 60px;
   height: 100%;
@@ -24,6 +75,7 @@
   position: absolute;
   left: 10px;
   top: 288px;
+  z-index: 1;
 }
 #weapons {
   height: 100vh;
@@ -36,7 +88,7 @@
   transform: rotate(90deg);
   background-repeat: no-repeat;
   width: 7px;
-  height: 60px;
+  height: 40px;
   position: absolute;
 }
 
@@ -45,10 +97,10 @@
   height: 100vh;
   position: absolute;
 }
-.enemy{
+.enemy {
   background-image: url("../images/enemy.png");
   background-repeat: no-repeat;
   width: 50px;
   height: 50px;
   position: absolute;
-} 
+}

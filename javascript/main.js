@@ -4,43 +4,52 @@ var ship = {
   top: 288,
 };
 
+var lives = 3;
+var score = 0;
 var weapons = [];
 var enemies = [];
 //constructor for creating enemies
 function updateEnemy() {
-    document.getElementById("enemies").innerHTML = "";
-    var i;
-    for (i = 0;i< enemies.length; i++){
-        document.getElementById("enemies").innerHTML +=
-        "<div class='enemy' style='left:" + 
-        enemies[i].left + 
-        "px; top:" +
-        enemies[i].top +
-        "px;'></div>";
-    }
+  document.getElementById("enemies").innerHTML = "";
+  var i;
+  for (i = 0; i < enemies.length; i++) {
+    document.getElementById("enemies").innerHTML +=
+      "<div class='enemy' style='left:" +
+      enemies[i].left +
+      "px; top:" +
+      enemies[i].top +
+      "px;'></div>";
+  }
 }
 
 function moveEnemy() {
-    var i;
-    for( i =0; i< enemies.length; i++) {
-        if(enemies[i].left >= -50){
-          enemies[i].left -= 3;
-        }   
+  var i;
+  for (i = 0; i < enemies.length; i++) {
+    if (enemies[i].left >= -50) {
+      enemies[i].left -= 3;
     }
+  }
 }
 
 function createEnemy() {
-    var l= document.documentElement.clientWidth - 50;
-    var t= 60;
-    for(i =1 ;i<=24 ;i++){
-      enemies.push({ left: l, top: t});
-      t+=90;
-      if( t>= document.documentElement.clientHeight - 60)
-      {
-          t=60;
-          l+=70;
+  var l = document.documentElement.clientWidth - 50;
+  var t = 105;
+  var count = 0;
+  for (i = 1; i <= 24; i++) {
+    enemies.push({ left: l, top: t });
+    t += 90;
+
+    if (t >= document.documentElement.clientHeight - 60) {
+      count++;
+      if (count % 2 == 0) {
+        t = 105;
+      } else {
+        t = 30;
       }
+
+      l += 70;
     }
+  }
 }
 //constructor for creating bullets
 function updateWeapon() {
@@ -116,12 +125,59 @@ function move(e) {
   }
 }
 
+//hitting enemies with bullets ---> using Axis aligned bounding box theroem
+function hitEnemiesWithBullets() {
+  for (var i = 0; i < weapons.length; i++) {
+    for (var j = 0; j < enemies.length; j++) {
+      if (
+        weapons[i].left < enemies[j].left + 50 &&
+        weapons[i].left + 7 > enemies[j].left &&
+        weapons[i].top < enemies[j].top + 50 &&
+        weapons[i].top + 40 > enemies[j].top
+      ) {
+        score += 10;
+        enemies.splice(j, 1);
+        weapons.splice(i, 1);
+      }
+    }
+  }
+}
+
+//if ship gets hit by enemies
+function hitByEnemies() {
+  for (var j = 0; j < enemies.length; j++) {
+    if (
+      ship.left < enemies[j].left + 50 &&
+      ship.left + 50 > enemies[j].left &&
+      ship.top < enemies[j].top + 50 &&
+      ship.top + 50 > enemies[j].top
+    ) {
+      lives--;
+      respawn();
+    }
+  }
+}
+
+//respawning ship at its initial position after being attacked
+function respawn() {
+  ship.left = 0;
+  ship.top = 288;
+}
+
+function updateStatus() {
+  document.getElementById("lives").innerHTML = "Lives: " + lives;
+  document.getElementById("score").innerHTML = "Score: " + score;
+}
+
 function loop() {
   setTimeout(loop, 100);
   moveWeapon();
   updateWeapon();
   moveEnemy();
   updateEnemy();
+  hitEnemiesWithBullets();
+  hitByEnemies();
+  updateStatus();
 }
 loop();
 createEnemy();
