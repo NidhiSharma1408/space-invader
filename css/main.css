@@ -4,6 +4,63 @@
   padding: 0;
   overflow: hidden;
 }
+
+#menu_bg {
+  background-image: url("../images/bg1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#container {
+  position: absolute;
+  top: 15%;
+  left: 25%;
+  width: 50vw;
+  height: 70vh;
+  border: 2px double #ffffff;
+}
+
+#title {
+  font-size: 4.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+#highScore {
+  font-size: 3rem;
+  margin-top: 30px;
+  margin-bottom: -50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+#end {
+  font-size: 5rem;
+  text-align: center;
+  margin-top: 8%;
+  color: #ffffff;
+}
+
+#player_score {
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+ul {
+  margin-top: 150px;
+  list-style-image: url("../images/hero.png");
+}
+
+ul li {
+  font-size: 3rem;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 #background {
   height: 100vh;
   width: 100vw;
@@ -11,24 +68,20 @@
   background-size: cover;
   position: relative;
 }
-#lives {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #ffffff;
+
+#status {
+  display: flex;
   font-size: 2rem;
+  color: #000000;
   margin: 10px;
+  z-index: -3;
 }
-#end {
-  display: none;
-  position: absolute;
-  top: 220px;
-  left: 288px;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 8rem;
-  z-index: 2;
+
+#lives,
+#score {
+  padding: 5px;
 }
+
 #hero-place {
   width: 60px;
   height: 100%;
@@ -53,23 +106,21 @@
 .weapon {
   background-image: url("../images/missile1.png");
   transform: rotate(90deg);
-  animation: rotation 1s infinite linear;
   background-repeat: no-repeat;
   width: 7px;
-  height: 30px;
+  height: 40px;
   position: absolute;
 }
 
-@keyframes rotation {
-  25% {
-    transform: rotate(45deg);
-  }
-  50% {
-    transform: rotate(135deg);
-  }
-}
 #enemies {
   width: 100vw;
   height: 100vh;
+  position: absolute;
+}
+.enemy {
+  background-image: url("../images/enemy.png");
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
   position: absolute;
 }

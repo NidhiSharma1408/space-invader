@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>CGame Over</title>
+    <style>
+      #player_score {
+        color: #ffffff;
+        margin-top: 40px;
+        margin-bottom: -90px;
+        text-align: center;
+      }
+      ul {
+        display: flex;
+        justify-content: center;
+      }
+      li {
+        color: #ffffff;
+        margin: 50px;
+      }
+    </style>
+  </head>
+
+  <body id="menu_bg">
+    <div id="container">
+      <div id="end">GAME OVER</div>
+      <div id="player_score"></div>
+      <ul>
+        <li><a href="../html/index.html">Play Again</a></li>
+        <li><a href="../html/menu.html">Menu</a></li>
+      </ul>
+    </div>
+    <script>
+      document.getElementById("player_score").innerHTML =
+        "Your Score: " + localStorage.getItem("score");
+    </script>
+  </body>
+</html>
