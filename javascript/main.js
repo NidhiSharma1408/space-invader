@@ -169,8 +169,18 @@ function updateStatus() {
   document.getElementById("score").innerHTML = "Score: " + score;
 }
 
+function checkForGameOver() {
+  if (lives == 0) {
+    localStorage.setItem("score", score);
+    if (score > localStorage.getItem("highScore")) {
+      localStorage.setItem("highScore", score);
+    }
+    window.location.href = "end.html";
+  }
+}
+
 function loop() {
-  setTimeout(loop, 100);
+  setTimeout(loop, 50);
   moveWeapon();
   updateWeapon();
   moveEnemy();

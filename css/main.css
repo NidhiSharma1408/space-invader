@@ -25,6 +25,26 @@
   color: #ffffff;
 }
 
+#highScore {
+  font-size: 3rem;
+  margin-top: 30px;
+  margin-bottom: -50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+#end {
+  font-size: 5rem;
+  text-align: center;
+  margin-top: 8%;
+  color: #ffffff;
+}
+
+#player_score {
+  font-size: 2rem;
+  color: #ffffff;
+}
+
 ul {
   margin-top: 150px;
   list-style-image: url("../images/hero.png");
