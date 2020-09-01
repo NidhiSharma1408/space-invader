@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Space Invader</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="../css/main.css"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>Document</title>
+    <style>
+      ul{
+        margin-top: 150px;
+      }
+    </style>
   </head>
-  <body>
-    <div id="status">
-      <div id="lives">Lives: 3</div>
-      <div id="score">Score: 0</div>
+  <body id="menu_bg">
+    <div id="container">
+      <div id="title">SPACE INVADERS</div>
+      <div id="highScore"></div>
+      <ul>
+        <li><a href="game.html">Play Game</a></li>
+        <li><a href="controls.html">Controls</a></li>
+      </ul>
     </div>
-    <div id="background">
-      <div id="hero-place"></div>
-      <div id="ship"></div>
-      <div id="weapons"></div>
-      <div id="enemies"></div>
-    </div>
-    <script src="../javascript/main.js"></script>
+    <script>
+      document.getElementById("highScore").innerHTML =
+        "High Score: " + localStorage.getItem("highScore");
+    </script>
   </body>
 </html>

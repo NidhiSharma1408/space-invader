@@ -46,12 +46,12 @@
 }
 
 ul {
-  margin-top: 150px;
+  margin-top: 10px;
   list-style-image: url("../images/hero.png");
 }
 
 ul li {
-  font-size: 3rem;
+  font-size: 2rem;
   color: #ffffff;
   text-align: center;
   padding: 5px;
@@ -71,33 +71,27 @@ a {
 
 #status {
   display: flex;
+  justify-content: space-around;
   font-size: 2rem;
   color: #000000;
-  margin: 10px;
-  z-index: -3;
+  margin: 0px;
+  z-index: 3;
 }
 
 #lives,
-#score {
+#score,#level {
   padding: 5px;
 }
 
-#hero-place {
-  width: 60px;
-  height: 100%;
-  position: fixed;
-  left: 0px;
-}
 #ship {
   width: 50px;
   height: 50px;
   background-image: url("../images/hero.png");
   position: absolute;
   left: 10px;
-  top: 288px;
   z-index: 1;
 }
-#weapons {
+#weapons,#enemies,#enemy-weapons {
   height: 100vh;
   width: 100vw;
   position: absolute;
@@ -105,16 +99,10 @@ a {
 
 .weapon {
   background-image: url("../images/missile1.png");
-  transform: rotate(90deg);
-  background-repeat: no-repeat;
-  width: 7px;
-  height: 40px;
-  position: absolute;
-}
 
-#enemies {
-  width: 100vw;
-  height: 100vh;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 7px;
   position: absolute;
 }
 .enemy {
@@ -123,4 +111,11 @@ a {
   width: 50px;
   height: 50px;
   position: absolute;
+}
+.enemy-weapon{
+background-image: url("../images/missile2.png");
+background-repeat: no-repeat;
+position: absolute;
+height: 7px;
+width: 40px;
 }
