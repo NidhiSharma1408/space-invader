@@ -374,7 +374,10 @@ function power_ups() {
   }
   if (getRandomNum(0, 1) == 1) {
     var options = getRandomNum(0, 1);
-    power.push({left: getRandomNum(100, 800), top: getRandomNum(0, 500) });
+    power.push(
+      {
+        left: getRandomNum(10,document.getElementById('background').clientWidth/2 ), 
+        top: getRandomNum(54, document.getElementById('background').clientHeight-50) });
     updatePower();
     var power_up= document.querySelector('#power_ups');
     if (options == 0) {
@@ -399,16 +402,18 @@ function loop() {
   if(lives==0)
     GameOver();
   if(level_cleared()){
+    createEnemy();
     level++;
     score += 50;
     lives++;
     time -= 250;
-    bullets = 42;
-    if(time == 0)
+    bullets = bullets+28;
+    weapons.splice(0,weapons.length);
+    updateWeapon();
+    if(time == 250)
       GameOver();
     clearInterval(interval);
     var interval = setInterval(ShootShip, time);
-    createEnemy();
   }
 }
 
