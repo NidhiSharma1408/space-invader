@@ -1,3 +1,5 @@
+/*setting the heigth of <div> that will contain enemies, weapon of ship, weapon of enemy.
+ '54 px in the height of container that shows score,lives and levels*/
 document.querySelector("#enemies").style.height =
   document.documentElement.clientHeight - 54 + "px";
 document.querySelector("#weapons").style.height =
@@ -9,12 +11,23 @@ var shoot = new Audio("../sounds/shoot.wav");
 var explosion = new Audio("../sounds/explosion.wav");
 var alien = new Audio("../sounds/ufo.wav");
 var kill = new Audio("../sounds/invaderkilled.wav");
-
+//----variable declaration----
 //Hero object
 var ship = {
   left: 10,
   top: document.documentElement.clientHeight / 2 - 25,
 };
+var lives = 3; //stroes remaining lives of ship; initially three
+var score = 0; //stores score; initially zero
+var d = 0; //controls direction of enemy .up pr down
+var time = 2500; // enemies shooting frequency; intially shoot one time in 2 sec
+var level = 1; //levels of game; initially level is one
+var weapons = []; // wepoon or bullets of ship
+var enemies = []; //enemies
+var enemyWeapon = []; //weapon or bullets of enemies
+var power = []; //power ups
+var delay = false;
+var bullets = 42;
 
 var lives = 5;
 var score = 0;
@@ -25,7 +38,8 @@ var weapons = [];
 var enemies = [];
 var enemyWeapon = [];
 var meteors = [];
-//constructor for creating enemies
+
+//----creating enemies in html----
 function updateEnemy() {
   document.getElementById("enemies").innerHTML = "";
   var i;
@@ -39,6 +53,7 @@ function updateEnemy() {
   }
 }
 
+//----move enemies in forward direction and remove them once they cross the screen----
 function moveEnemy() {
   var i;
   for (i = 0; i < enemies.length; i++) {
@@ -50,6 +65,7 @@ function moveEnemy() {
   }
 }
 
+//----setting initial position of enemies----
 function createEnemy() {
   var l = document.getElementById("enemies").clientWidth - 50;
   var t = 10;
@@ -64,9 +80,14 @@ function createEnemy() {
   }
 }
 
+/*function to set the path of enemies:
+ -> if the enemies touch the bottom of screen, start moving them upward
+ -> if the enemies touch the top of screen, start moving them downward
+ -> move enemies forward when any of them touches the bottom or top
+*/
 function moveEnemyUpDown() {
   if (d == 0) {
-    for (i = 0; i < enemies.length; i++) {
+    for (i = 0; i < enemies.length - 1; i++) {
       if (enemies[i].top <= 10) {
         d = 1;
         moveEnemy();
@@ -77,13 +98,12 @@ function moveEnemyUpDown() {
     }
   }
   if (d == 1) {
-    for (i = 0; i < enemies.length; i++) {
+    for (i = 0; i < enemies.length - 1; i++) {
       if (
         enemies[i].top >=
         document.getElementById("enemies").clientHeight - 60
       ) {
         d = 0;
-
         moveEnemy();
         break;
       } else {
@@ -91,6 +111,7 @@ function moveEnemyUpDown() {
       }
     }
   }
+  updateEnemy();
 }
 function createMeteor() {
   var t = 10;
@@ -130,7 +151,7 @@ function moveMeteor() {
   }
 }
 
-//constructor for creating bullets
+//----creating weapons in html----
 function updateWeapon() {
   document.getElementById("weapons").innerHTML = "";
   var i;
@@ -144,25 +165,24 @@ function updateWeapon() {
   }
 }
 
+//----move ship's weapon----
 function moveWeapon() {
   var i;
   for (i = 0; i < weapons.length; i++) {
     weapons[i].left += 10;
+    //remove the weapon if when it goes outside the html page width
     if (weapons[i].left >= document.documentElement.clientWidth) {
       weapons.splice(i, 1);
     }
   }
+  updateWeapon();
 }
 
-//updating ship
+//----updating ship's position in html----
 function updateShip() {
   document.getElementById("ship").style.left = ship.left + "px";
   document.getElementById("ship").style.top = ship.top + "px";
 }
-
-var delay = false;
-
-document.addEventListener("keydown", move);
 
 function move(e) {
   switch (e.keyCode) {
@@ -203,10 +223,11 @@ function move(e) {
       break;
 
     case 32:
-      if (delay == false && weapons.length < 2) {
+      if (delay == false && weapons.length < bullets) {
         delay == true;
         shoot.play();
         weapons.push({ left: ship.left, top: ship.top - 33 });
+        bullets--;
         updateWeapon();
         setTimeout(function () {
           delay = false;
@@ -217,7 +238,13 @@ function move(e) {
   }
 }
 
-//hitting enemies with bullets ---> using Axis aligned bounding box theroem
+/* check if ship's weapon hit the enemies:
+if so:
+  -> increase score
+  -> remove that enemy which was hit
+  -> remove weapon 
+*/
+
 function hitEnemiesWithBullets() {
   for (var i = 0; i < weapons.length; i++) {
     for (var j = 0; j < enemies.length; j++) {
@@ -231,22 +258,22 @@ function hitEnemiesWithBullets() {
         score += 10;
         enemies.splice(j, 1);
         weapons.splice(i, 1);
-        break;
+        bullets++;
+        break; //if we don't use break here, it will throw an error in case when only one weapon is there.
       }
     }
   }
 }
 
-function splicingBullets() {
-  for (var i = 0; i < weapons.length; i++) {
-    if (weapons[i].left > document.documentElement.clientWidth) {
-      weapons.splice(i, 1);
-    }
-  }
-}
-
-//if ship gets hit by enemies
+/* check if ship collides with bullets or enemy-ship.
+if so: 
+-> decrease remaining lives. 
+-> respawn the ship. 
+-> remove the bullet/enemy-ship that hit the ship. 
+-> update position of ship on screen
+*/
 function hitByEnemies() {
+  //check if enemy hit the ship.
   for (var j = 0; j < enemies.length; j++) {
     if (
       ship.left < enemies[j].left + 50 &&
@@ -260,6 +287,7 @@ function hitByEnemies() {
       updateShip();
     }
   }
+  //check if enemies' weapon hit the ship.
   for (var j = 0; j < enemyWeapon.length; j++) {
     if (
       enemyWeapon[j].left > ship.left &&
@@ -289,7 +317,7 @@ function hitByEnemies() {
   }
 }
 
-//respawning ship at its initial position after being attacked
+//----respawning ship at its initial position after being attacked----
 function respawn() {
   explosion.play();
   ship.left = 0;
@@ -297,70 +325,149 @@ function respawn() {
   power_ups();
 }
 
-//Power_up function
-var power = document.getElementById("power_ups");
-var power_left;
-var power_top;
-function power_ups() {
-  if (getRandomNum(0, 1) == 1) {
-    var options = getRandomNum(0, 1);
-    var a = getRandomNum(100, 800);
-    var b = getRandomNum(0, 500);
-    power.style.left = a + "px";
-    power.style.top = b + "px";
-    power_left = a;
-    power_top = b;
-    if (options == 0) {
-      power.style.backgroundImage = "url('../images/hero.png')";
-      captureBonus();
-    } else {
-      power.style.backgroundImage = "url('../images/enemy.png')";
-      captureBonus();
-    }
+//----returns true when ship has crossed all enemies----
+function out(enemy) {
+  return enemy.left <= ship.left;
+}
+
+//----returns true if the current level is completed----
+function level_cleared() {
+  if (enemies.every(out) || enemies.length == 0) {
+    return true;
+  } else {
+    return false;
   }
 }
 
-/*
-function captureBonus() {
-  if (
-    ship.left < power_left + 50 &&
-    ship.left + 50 > power_left &&
-    ship.top < power_top + 50 &&
-    ship.top + 50 > power_top
-  )
-    alert("HIT!");
-  power.style.display = "none";
+//----random enemy will shoot the ship.----
+function ShootShip() {
+  //no shooting when there is no enemy
+  if (enemies.length == 0) {
+    return;
+  }
+  var i = Math.floor(Math.random() * enemies.length);
+  enemyWeapon.push({ left: enemies[i].left, top: enemies[i].top - 25 });
+  i = enemies.length - 1;
+  enemies[i].top = ship.top;
+  enemyWeapon.push({
+    left: enemies[i].left,
+    top: ship.top - 25,
+  });
 }
-*/
+
+//----creating enemies's weapon in html----
+function updateEweapon() {
+  document.getElementById("enemy-weapons").innerHTML = "";
+  var i;
+  for (i = 0; i < enemyWeapon.length; i++) {
+    document.getElementById("enemy-weapons").innerHTML +=
+      "<div class='enemy-weapon' style='left:" +
+      enemyWeapon[i].left +
+      "px; top:" +
+      enemyWeapon[i].top +
+      "px;'></div>";
+  }
+}
+
+//----move enemies' weapon forward. remove them when they cross the ship----
+function moveEweapon() {
+  var i;
+  for (i = 0; i < enemyWeapon.length; i++) {
+    if (enemyWeapon[i].left > ship.left) {
+      enemyWeapon[i].left -= 10;
+    } else {
+      enemyWeapon.splice(i, 1);
+    }
+  }
+  updateEweapon();
+}
+
+//----update score, remaining life and current level----
 function updateStatus() {
   document.getElementById("lives").innerHTML = "Lives: " + lives;
   document.getElementById("score").innerHTML = "Score: " + score;
   document.getElementById("level").innerHTML = "Level: " + level;
+  document.getElementById("bullets").innerHTML =
+    "Bullets remaining: " + bullets;
 }
 
-function checkForGameOver() {
+//----stop the game and move to result's page; store the current score in local storage----
+function GameOver() {
   localStorage.setItem("score", score);
+  //if the score is greater than the highscore, update highscore
   if (score > localStorage.getItem("highScore")) {
     localStorage.setItem("highScore", score);
   }
   window.location.href = "end.html";
 }
 
+//----returns random number between a given range----
+function getRandomNum(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//---if ship catches the bonus then increase life and score---
+function captureBonus() {
+  if (power.length == 0) {
+    return;
+  }
+  if (
+    ship.left < power[0].left + 50 &&
+    ship.left + 50 > power[0].left &&
+    ship.top < power[0].top + 50 &&
+    ship.top + 50 > power[0].top
+  ) {
+    power.splice(0, 1);
+    lives++;
+    bullets += 5;
+    score += 30;
+  }
+}
+
+//---manage visibily of power ups in html----
+function updatePower() {
+  var power_up = document.querySelector("#power_ups");
+  if (power.length == 0) {
+    power_up.style.visibility = "hidden";
+    return;
+  }
+  power_up.style.visibility = "visible";
+  power_up.style.left = power[0].left + "px";
+  power_up.style.top = power[0].top + "px";
+}
+//----create power ups and updates them----
+function power_ups() {
+  if (power.length != 0) {
+    power.splice(0, 1);
+  }
+  if (getRandomNum(0, 1) == 1) {
+    var options = getRandomNum(0, 1);
+    power.push({ left: getRandomNum(100, 800), top: getRandomNum(0, 500) });
+    updatePower();
+    var power_up = document.querySelector("#power_ups");
+    if (options == 0) {
+      power_up.style.backgroundImage = "url('../images/fuel.png')";
+    } else {
+      power_up.style.backgroundImage = "url('../images/blast.gif')";
+    }
+  }
+}
+
+//----game control function---
 function loop() {
   setTimeout(loop, 50);
   moveWeapon();
-  splicingBullets();
-  updateWeapon();
   moveEnemyUpDown();
   updateEnemy();
   updateMeteor();
   moveMeteor();
   hitEnemiesWithBullets();
   hitByEnemies();
-  updateEweapon();
   moveEweapon();
   updateStatus();
-  if (lives <= 0) checkForGameOver();
+  captureBonus();
+  updatePower();
+  if (lives == 0) GameOver();
   if (level_cleared()) {
     level++;
     meteors = [];
@@ -368,14 +475,17 @@ function loop() {
     if (lives < 5) {
       lives++;
     }
-    time -= 500;
-    if (time == 0) checkForGameOver();
+    time -= 250;
+    bullets = 42;
+    if (time == 0) GameOver();
     clearInterval(interval);
     var interval = setInterval(ShootShip, time);
     createEnemy();
     createMeteor();
   }
 }
+
+//----initialise the game----
 updateShip();
 createEnemy();
 createMeteor();
@@ -383,9 +493,7 @@ createMeteor();
 var interval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
-function out(enemy) {
-  return enemy.left <= ship.left;
-}
+setInterval(power_ups, 2000);
 
 function level_cleared() {
   if (enemies.every(out) || enemies.length == 0) {
@@ -423,8 +531,4 @@ function moveEweapon() {
       enemyWeapon.splice(i, 1);
     }
   }
-}
-
-function getRandomNum(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
