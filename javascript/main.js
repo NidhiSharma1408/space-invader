@@ -4,7 +4,7 @@ var ship = {
   top: 288,
 };
 
-var lives = 3;
+var lives = 5;
 var score = 0;
 var weapons = [];
 var enemies = [];
@@ -35,7 +35,7 @@ function createEnemy() {
   var l = document.documentElement.clientWidth - 50;
   var t = 105;
   var count = 0;
-  for (i = 1; i <= 24; i++) {
+  for (i = 1; i <= getRandomNum(16, 24); i++) {
     enemies.push({ left: l, top: t });
     t += 90;
 
@@ -50,6 +50,10 @@ function createEnemy() {
       l += 70;
     }
   }
+}
+
+function getRandomNum(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //constructor for creating bullets
 function updateWeapon() {
@@ -77,6 +81,8 @@ function updateShip() {
   document.getElementById("ship").style.left = ship.left + "px";
   document.getElementById("ship").style.top = ship.top + "px";
 }
+
+var cooldown = false;
 
 document.addEventListener("keydown", move);
 
@@ -119,8 +125,16 @@ function move(e) {
       break;
 
     case 32:
-      weapons.push({ left: ship.left, top: ship.top });
-      updateWeapon();
+      //cooling down bullets whe firing
+      if (cooldown == false && weapons.length < 2) {
+        cooldown = true;
+        weapons.push({ left: ship.left, top: ship.top });
+        updateWeapon();
+        setTimeout(function () {
+          cooldown = false;
+        }, 5);
+      }
+
       break;
   }
 }
@@ -139,6 +153,14 @@ function hitEnemiesWithBullets() {
         enemies.splice(j, 1);
         weapons.splice(i, 1);
       }
+    }
+  }
+}
+
+function splicingBullets() {
+  for (var i = 0; i < weapons.length; i++) {
+    if (weapons[i].left > document.documentElement.clientWidth) {
+      weapons.splice(i, 1);
     }
   }
 }
@@ -162,8 +184,44 @@ function hitByEnemies() {
 function respawn() {
   ship.left = 0;
   ship.top = 288;
+  power_ups();
 }
 
+//Power_up function
+var power = document.getElementById("power_ups");
+var power_left;
+var power_top;
+function power_ups() {
+  if (getRandomNum(0, 1) == 1) {
+    var options = getRandomNum(0, 1);
+    var a = getRandomNum(100, 800);
+    var b = getRandomNum(0, 500);
+    power.style.left = a + "px";
+    power.style.top = b + "px";
+    power_left = a;
+    power_top = b;
+    if (options == 0) {
+      power.style.backgroundImage = "url('../images/hero.png')";
+      captureBonus();
+    } else {
+      power.style.backgroundImage = "url('../images/enemy.png')";
+      captureBonus();
+    }
+  }
+}
+
+/*
+function captureBonus() {
+  if (
+    ship.left < power_left + 50 &&
+    ship.left + 50 > power_left &&
+    ship.top < power_top + 50 &&
+    ship.top + 50 > power_top
+  )
+    alert("HIT!");
+  power.style.display = "none";
+}
+*/
 function updateStatus() {
   document.getElementById("lives").innerHTML = "Lives: " + lives;
   document.getElementById("score").innerHTML = "Score: " + score;
@@ -180,14 +238,16 @@ function checkForGameOver() {
 }
 
 function loop() {
-  setTimeout(loop, 50);
+  setTimeout(loop, 30);
   moveWeapon();
+  splicingBullets();
   updateWeapon();
   moveEnemy();
   updateEnemy();
   hitEnemiesWithBullets();
   hitByEnemies();
   updateStatus();
+  checkForGameOver();
 }
 loop();
 createEnemy();
