@@ -6,7 +6,7 @@
 }
 
 #menu_bg {
-  background-image: url("../images/bg1.png");
+  background-image: url("../images/background.gif");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -46,12 +46,12 @@
 }
 
 ul {
-  margin-top: 150px;
+  margin-top: 10px;
   list-style-image: url("../images/hero.png");
 }
 
 ul li {
-  font-size: 3rem;
+  font-size: 2rem;
   color: #ffffff;
   text-align: center;
   padding: 5px;
@@ -64,40 +64,40 @@ a {
 #background {
   height: 100vh;
   width: 100vw;
-  background-image: url("../images/background.png");
-  background-size: cover;
+  background-image: url("../images/background.jpg");
+  /* background-size: cover; */
   position: relative;
+  background-repeat: repeat-x;
+  animation: animatedBackground 10s linear infinite;
 }
 
 #status {
   display: flex;
+  justify-content: space-around;
   font-size: 2rem;
   color: #000000;
-  margin: 10px;
-  z-index: -3;
+  margin: 0px;
+  z-index: 3;
 }
 
 #lives,
-#score {
+#score,
+#level {
   padding: 5px;
+  color: white;
 }
 
-#hero-place {
-  width: 60px;
-  height: 100%;
-  position: fixed;
-  left: 0px;
-}
 #ship {
   width: 50px;
   height: 50px;
   background-image: url("../images/hero.png");
   position: absolute;
   left: 10px;
-  top: 288px;
   z-index: 1;
 }
-#weapons {
+#weapons,
+#enemies,
+#enemy-weapons {
   height: 100vh;
   width: 100vw;
   position: absolute;
@@ -105,16 +105,10 @@ a {
 
 .weapon {
   background-image: url("../images/missile1.png");
-  transform: rotate(90deg);
+  background-size: cover;
   background-repeat: no-repeat;
-  width: 7px;
-  height: 40px;
-  position: absolute;
-}
-
-#enemies {
-  width: 100vw;
-  height: 100vh;
+  width: 42px;
+  height: 15px;
   position: absolute;
 }
 .enemy {
@@ -123,6 +117,22 @@ a {
   width: 50px;
   height: 50px;
   position: absolute;
+}
+.enemy-weapon {
+  background-image: url("../images/missile2.png");
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 15px;
+  background-size: cover;
+  width: 42px;
+}
+@keyframes animatedBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
 }
 
 #power_ups {
