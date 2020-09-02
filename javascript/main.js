@@ -1,21 +1,25 @@
+/*setting the heigth of <div> that will contain enemies, weapon of ship, weapon of enemy.
+ '54 px in the height of container that shows score,lives and levels*/
 document.querySelector('#enemies').style.height = document.documentElement.clientHeight - 54 +'px';
 document.querySelector('#weapons').style.height = document.documentElement.clientHeight - 54 +'px';
 document.querySelector('#enemy-weapons').style.height = document.documentElement.clientHeight - 54 +'px';
+
+//----variable declaration----
 //Hero object
 var ship = {
   left: 10,
   top: document.documentElement.clientHeight/2 - 25,
 };
+var lives = 3;      //stroes remaining lives of ship; initially three
+var score = 0;      //stores score; initially zero
+var d=0;            //controls direction of enemy .up pr down 
+var time=2000;      // enemies shooting frequency; intially shoot one time in 2 sec
+var level =1;       //levels of game; initially level is one
+var weapons = [];   // wepoon or bullets of ship
+var enemies = [];  //enemies 
+var enemyWeapon=[];//weapon or bullets of enemies
 
-var lives = 3;
-var score = 0;
-var d=0;
-var time=2000;
-var level =1;
-var weapons = [];
-var enemies = [];
-var enemyWeapon=[];
-//constructor for creating enemies
+//----creating enemies in html----
 function updateEnemy() {
   document.getElementById("enemies").innerHTML = "";
   var i;
@@ -29,6 +33,7 @@ function updateEnemy() {
   }
 }
 
+//----move enemies in forward direction and remove them once they cross the screen----
 function moveEnemy() {
   var i;
   for (i = 0; i < enemies.length; i++) {
@@ -41,55 +46,53 @@ function moveEnemy() {
   }
 }
 
+//----setting initial position of enemies----
 function createEnemy() {
   var l= document.getElementById('enemies').clientWidth - 50;
   var t= 10;
   for(i =1 ;i<=28 ;i++){
     enemies.push({ left: l, top: t});
     t+=70;
-    if( t>= document.getElementById('enemies').clientHeight - 120)
-    {
+    if( t>= document.getElementById('enemies').clientHeight - 120){
         t=10;
         l+=70;
     }
   }
 }
 
-
-  function moveEnemyUpDown(){
-    if(d==0){  
-      
-    for( i=0; i<enemies.length; i++){
-      if(enemies[i].top <= 10){
-
-        d=1;
-        moveEnemy();
-        break;
-      }
-      else{
-
-          enemies[i].top -= 2.5;
-      }
-    }
-  }
-    if(d==1){      
+/*function to set the path of enemies:
+ -> if the enemies touch the bottom of screen, start moving them upward
+ -> if the enemies touch the top of screen, start moving them downward
+ -> move enemies forward when any of them touches the bottom or top
+*/
+function moveEnemyUpDown(){
+    if(d==0){   
       for( i=0; i<enemies.length; i++){
-        if(enemies[i].top >= document.getElementById('enemies').clientHeight-60){
-          d=0;
-        
+        if(enemies[i].top <= 10){
+          d=1;
           moveEnemy();
           break;
         }
         else{
-       
+          enemies[i].top -= 2.5;
+        }
+      }
+    }
+    if(d==1){      
+      for( i=0; i<enemies.length; i++){
+        if(enemies[i].top >= document.getElementById('enemies').clientHeight-60){
+          d=0;
+          moveEnemy();
+          break;
+        }
+        else{
           enemies[i].top +=2.5;
         }
       }
     }  
-  }
+}
 
-
-//constructor for creating bullets
+//----creating weapons in html----
 function updateWeapon() {
   document.getElementById("weapons").innerHTML = "";
   var i;
@@ -103,23 +106,23 @@ function updateWeapon() {
   }
 }
 
+//----move ship's weapon----
 function moveWeapon() {
   var i;
   for (i = 0; i < weapons.length; i++) {
     weapons[i].left += 10;
+    //remove the weapon if when it goes outside the html page width 
     if(weapons[i].left >= document.documentElement.clientWidth){
       weapons.splice(i,1);
     }
   }
 }
 
-//updating ship
+//----updating ship's position in html----
 function updateShip() {
   document.getElementById("ship").style.left = ship.left + "px";
   document.getElementById("ship").style.top = ship.top + "px";
 }
-
-document.addEventListener("keydown", move);
 
 function move(e) {
   switch (e.keyCode) {
@@ -166,7 +169,13 @@ function move(e) {
   }
 }
 
-//hitting enemies with bullets ---> using Axis aligned bounding box theroem
+/* check if ship's weapon hit the enemies:
+if so:
+  -> increase score
+  -> remove that enemy which was hit
+  -> remove weapon 
+*/
+
 function hitEnemiesWithBullets() {
   for (var i = 0; i < weapons.length; i++) {
     for (var j = 0; j < enemies.length; j++) {
@@ -179,14 +188,21 @@ function hitEnemiesWithBullets() {
         score += 10;
         enemies.splice(j, 1);
         weapons.splice(i, 1);
-        break;
+        break;//if we don't use break here, it will throw an error in case when only one weapon is there.
       }
     }
   }
 }
 
-//if ship gets hit by enemies
+/* check if ship collides with bullets or enemy-ship.
+if so: 
+-> decrease remaining lives. 
+-> respawn the ship. 
+-> remove the bullet/enemy-ship that hit the ship. 
+-> update position of ship on screen
+*/
 function hitByEnemies() {
+  //check if enemy hit the ship.
   for (var j = 0; j < enemies.length; j++) {
     if (
       ship.left < enemies[j].left + 50 &&
@@ -200,6 +216,7 @@ function hitByEnemies() {
       updateShip();
     }
   }
+  //check if enemies' weapon hit the ship.
   for( var j=0;j< enemyWeapon.length;j++){
     if(
       enemyWeapon[j].left > ship.left && enemyWeapon[j].left < ship.left+50 &&
@@ -213,61 +230,18 @@ function hitByEnemies() {
   }
 }
 
-//respawning ship at its initial position after being attacked
+//----respawning ship at its initial position after being attacked----
 function respawn() {
   ship.left = 0;
   ship.top = document.documentElement.clientHeight/2 - 25;
 }
 
-function updateStatus() {
-  document.getElementById("lives").innerHTML = "Lives: " + lives;
-  document.getElementById("score").innerHTML = "Score: " + score;
-  document.getElementById("level").innerHTML = "Level: " + level;
-}
-
-function checkForGameOver() {
-    localStorage.setItem("score", score);
-    if (score > localStorage.getItem("highScore")) {
-      localStorage.setItem("highScore", score);
-    }
-    window.location.href = "end.html";
-}
-
-function loop() {
-  setTimeout(loop, 50);
-  moveWeapon();
-  updateWeapon();
-  moveEnemyUpDown();
-  updateEnemy();
-  hitEnemiesWithBullets();
-  hitByEnemies();
-  updateEweapon();
-  moveEweapon();
-  updateStatus();
-  if(lives==0)
-    checkForGameOver();
-  if(level_cleared()){
-    level++;
-    score+=50;
-    lives++;
-    time -= 500;
-    if(time == 0)
-      checkForGameOver();
-    clearInterval(interval);
-    var interval = setInterval(ShootShip, time);
-    createEnemy();
-  }
-  
-}
-updateShip();
-createEnemy();
-var interval = setInterval(ShootShip, time);
-document.addEventListener("keydown", move);
-loop();
+//----returns true when ship has crossed all enemies----
 function out(enemy){
   return enemy.left <= ship.left;
 }
 
+//----check if the current level is completed----
 function level_cleared(){
   if(enemies.every(out) || enemies.length==0){
     return true;
@@ -276,16 +250,21 @@ function level_cleared(){
      return false;
    }
 }
+
+//----random enemy will shoot the ship.----
 function ShootShip(){
+  //no shooting when there is no enemy
   if(enemies.length==0){
     return;
   }
   var i=Math.floor(Math.random() * enemies.length);
   enemyWeapon.push(
     {left: enemies[i].left,
-     top: enemies[i].top}
+     top: enemies[i].top-25}
      );
 }
+
+//----creating enemies's weapon in html----
 function updateEweapon(){
   document.getElementById("enemy-weapons").innerHTML = "";
     var i;
@@ -298,10 +277,12 @@ function updateEweapon(){
         "px;'></div>";
     }
 }
+
+//----move enemies' weapon forward. remove them when they cross the screen---- 
 function moveEweapon(){
   var i;
     for (i = 0; i < enemyWeapon.length; i++) {
-        if(enemyWeapon[i].left >= -40){
+        if(enemyWeapon[i].left >= -42){
             enemyWeapon[i].left -= 10;  
         }
         else{
@@ -309,3 +290,56 @@ function moveEweapon(){
         }
     }
 }
+
+//----update score, remaining life and current level----
+function updateStatus() {
+  document.getElementById("lives").innerHTML = "Lives: " + lives;
+  document.getElementById("score").innerHTML = "Score: " + score;
+  document.getElementById("level").innerHTML = "Level: " + level;
+}
+
+//----stop the game and move to result's page; store the current score in local storage----
+function GameOver() {
+    localStorage.setItem("score", score);
+    //if the score is greater than the highscore, update highscore
+    if (score > localStorage.getItem("highScore")) {
+      localStorage.setItem("highScore", score);
+    }
+    window.location.href = "end.html";
+}
+
+//----game control function---
+function loop() {
+  setTimeout(loop, 50);
+  moveWeapon();
+  updateWeapon();
+  moveEnemyUpDown();
+  updateEnemy();
+  hitEnemiesWithBullets();
+  hitByEnemies();
+  updateEweapon();
+  moveEweapon();
+  updateStatus();
+  if(lives==0)
+    GameOver();
+  if(level_cleared()){
+    level++;
+    score+=50;
+    lives++;
+    time -= 500;
+    if(time == 0)
+      GameOver();
+    clearInterval(interval);
+    var interval = setInterval(ShootShip, time);
+    createEnemy();
+  }
+  
+}
+
+//----initialise the game----
+updateShip();
+createEnemy();
+var interval = setInterval(ShootShip, time);
+document.addEventListener("keydown", move);
+loop();
+
