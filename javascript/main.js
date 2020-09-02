@@ -4,6 +4,12 @@ document.querySelector("#weapons").style.height =
   document.documentElement.clientHeight - 54 + "px";
 document.querySelector("#enemy-weapons").style.height =
   document.documentElement.clientHeight - 54 + "px";
+
+var shoot = new Audio("../sounds/shoot.wav");
+var explosion = new Audio("../sounds/explosion.wav");
+var alien = new Audio("../sounds/ufo.wav");
+var kill = new Audio("../sounds/invaderkilled.wav");
+
 //Hero object
 var ship = {
   left: 10,
@@ -18,6 +24,7 @@ var level = 1;
 var weapons = [];
 var enemies = [];
 var enemyWeapon = [];
+var meteors = [];
 //constructor for creating enemies
 function updateEnemy() {
   document.getElementById("enemies").innerHTML = "";
@@ -46,7 +53,8 @@ function moveEnemy() {
 function createEnemy() {
   var l = document.getElementById("enemies").clientWidth - 50;
   var t = 10;
-  for (i = 1; i <= 28; i++) {
+  for (var i = 1; i <= 28; i++) {
+    alien.play();
     enemies.push({ left: l, top: t });
     t += 70;
     if (t >= document.getElementById("enemies").clientHeight - 120) {
@@ -81,6 +89,43 @@ function moveEnemyUpDown() {
       } else {
         enemies[i].top += 2.5;
       }
+    }
+  }
+}
+function createMeteor() {
+  var t = 10;
+  var l = 150;
+  var i;
+  for (i = 1; i <= 40; i++) {
+    meteors.push({ left: l, top: t });
+    l += 200;
+    if (l >= document.documentElement.clientWidth - 100) {
+      t += 150;
+      l = 200;
+    }
+  }
+}
+
+function updateMeteor() {
+  document.getElementById("meteors").innerHTML = "";
+  var i;
+  for (i = 0; i < meteors.length; i++) {
+    document.getElementById("meteors").innerHTML +=
+      "<div class='meteor' style='left:" +
+      meteors[i].left +
+      "px; top:" +
+      meteors[i].top +
+      "px;'></div>";
+  }
+}
+
+function moveMeteor() {
+  var i;
+  for (i = 0; i < meteors.length; i++) {
+    if (meteors[i].top <= document.documentElement.clientHeight) {
+      meteors[i].top += 0.2;
+    } else {
+      meteors.splice(i, 1);
     }
   }
 }
@@ -160,6 +205,7 @@ function move(e) {
     case 32:
       if (delay == false && weapons.length < 2) {
         delay == true;
+        shoot.play();
         weapons.push({ left: ship.left, top: ship.top - 33 });
         updateWeapon();
         setTimeout(function () {
@@ -181,6 +227,7 @@ function hitEnemiesWithBullets() {
         weapons[i].top < enemies[j].top + 50 &&
         weapons[i].top + 15 > enemies[j].top
       ) {
+        kill.play();
         score += 10;
         enemies.splice(j, 1);
         weapons.splice(i, 1);
@@ -226,10 +273,25 @@ function hitByEnemies() {
       updateShip();
     }
   }
+
+  for (var j = 0; j < meteors.length; j++) {
+    if (
+      ship.left < meteors[j].left + 50 &&
+      ship.left + 50 > meteors[j].left &&
+      ship.top - 54 < meteors[j].top + 50 &&
+      ship.top + 4 > meteors[j].top
+    ) {
+      lives--;
+      meteors.splice(j, 1);
+      respawn();
+      updateShip();
+    }
+  }
 }
 
 //respawning ship at its initial position after being attacked
 function respawn() {
+  explosion.play();
   ship.left = 0;
   ship.top = document.documentElement.clientHeight / 2 - 25;
   power_ups();
@@ -285,31 +347,39 @@ function checkForGameOver() {
 }
 
 function loop() {
-  setTimeout(loop, 30);
+  setTimeout(loop, 50);
   moveWeapon();
   splicingBullets();
   updateWeapon();
   moveEnemyUpDown();
   updateEnemy();
+  updateMeteor();
+  moveMeteor();
   hitEnemiesWithBullets();
   hitByEnemies();
   updateEweapon();
   moveEweapon();
   updateStatus();
-  if (lives == 0) checkForGameOver();
+  if (lives <= 0) checkForGameOver();
   if (level_cleared()) {
     level++;
+    meteors = [];
     score += 50;
-    lives++;
+    if (lives < 5) {
+      lives++;
+    }
     time -= 500;
     if (time == 0) checkForGameOver();
     clearInterval(interval);
     var interval = setInterval(ShootShip, time);
     createEnemy();
+    createMeteor();
   }
 }
 updateShip();
 createEnemy();
+createMeteor();
+
 var interval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
@@ -331,6 +401,7 @@ function ShootShip() {
   var i = Math.floor(Math.random() * enemies.length);
   enemyWeapon.push({ left: enemies[i].left, top: enemies[i].top });
 }
+
 function updateEweapon() {
   document.getElementById("enemy-weapons").innerHTML = "";
   var i;
