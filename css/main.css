@@ -65,10 +65,10 @@ a {
   height: 100vh;
   width: 100vw;
   background-image: url("../images/background.jpg");
-  /* background-size: cover; */
+   /* background-size: cover;  */
   position: relative;
-   background-repeat: repeat-x;
-   animation: animatedBackground 10s linear infinite; 
+  background-repeat: repeat;
+  animation: animatedBackground 10s linear infinite reverse;
 }
 
 #status {
@@ -81,7 +81,8 @@ a {
 }
 
 #lives,
-#score,#level {
+#score,
+#level,#bullets {
   padding: 5px;
   color: white;
 }
@@ -94,7 +95,9 @@ a {
   left: 10px;
   z-index: 1;
 }
-#weapons,#enemies,#enemy-weapons {
+#weapons,
+#enemies,
+#enemy-weapons {
   height: 100vh;
   width: 100vw;
   position: absolute;
@@ -115,13 +118,13 @@ a {
   height: 50px;
   position: absolute;
 }
-.enemy-weapon{
-background-image: url("../images/missile2.png");
-background-repeat: no-repeat;
-position: absolute;
-height: 15px;
-background-size: cover;
-width: 42px;
+.enemy-weapon {
+  background-image: url("../images/missile2.png");
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 15px;
+  background-size: cover;
+  width: 42px;
 }
 @keyframes animatedBackground {
   from {
@@ -130,4 +133,14 @@ width: 42px;
   to {
     background-position: 100% 0;
   }
+}
+
+#power_ups {
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  background-image: url("../images/fuel.png");
+  z-index: 1;
 }
