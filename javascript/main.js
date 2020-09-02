@@ -35,6 +35,9 @@ function moveEnemy() {
     if (enemies[i].left >= -50) {
       enemies[i].left -= 50;
     }
+    else{
+      enemies.splice(i,1);
+    }
   }
 }
 
@@ -104,6 +107,9 @@ function moveWeapon() {
   var i;
   for (i = 0; i < weapons.length; i++) {
     weapons[i].left += 10;
+    if(weapons[i].left >= document.documentElement.clientWidth){
+      weapons.splice(i,1);
+    }
   }
 }
 
@@ -166,13 +172,14 @@ function hitEnemiesWithBullets() {
     for (var j = 0; j < enemies.length; j++) {
       if (
         weapons[i].left < enemies[j].left + 50 &&
-        weapons[i].left + 40 > enemies[j].left &&
+        weapons[i].left + 42 > enemies[j].left &&
         weapons[i].top < enemies[j].top + 50 &&
-        weapons[i].top + 7 > enemies[j].top
+        weapons[i].top + 15 > enemies[j].top
       ) {
         score += 10;
         enemies.splice(j, 1);
         weapons.splice(i, 1);
+        break;
       }
     }
   }
@@ -196,7 +203,7 @@ function hitByEnemies() {
   for( var j=0;j< enemyWeapon.length;j++){
     if(
       enemyWeapon[j].left > ship.left && enemyWeapon[j].left < ship.left+50 &&
-      enemyWeapon[j].top+7 > ship.top-54 && enemyWeapon[j].top < ship.top +4
+      enemyWeapon[j].top+15 > ship.top-54 && enemyWeapon[j].top < ship.top +4
     ){
       lives--;
       respawn();
@@ -219,13 +226,11 @@ function updateStatus() {
 }
 
 function checkForGameOver() {
-  if (lives == 0) {
     localStorage.setItem("score", score);
     if (score > localStorage.getItem("highScore")) {
       localStorage.setItem("highScore", score);
     }
     window.location.href = "end.html";
-  }
 }
 
 function loop() {
@@ -239,22 +244,30 @@ function loop() {
   updateEweapon();
   moveEweapon();
   updateStatus();
-  checkForGameOver();
+  if(lives==0)
+    checkForGameOver();
   if(level_cleared()){
     level++;
     score+=50;
+    lives++;
+    time -= 500;
+    if(time == 0)
+      checkForGameOver();
+    clearInterval(interval);
+    var interval = setInterval(ShootShip, time);
     createEnemy();
   }
   
 }
 updateShip();
 createEnemy();
-setInterval(ShootShip, time);
+var interval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
 function out(enemy){
-  return enemy.left <= 0;
+  return enemy.left <= ship.left;
 }
+
 function level_cleared(){
   if(enemies.every(out) || enemies.length==0){
     return true;
@@ -264,13 +277,14 @@ function level_cleared(){
    }
 }
 function ShootShip(){
-  var i=Math.floor(Math.random() * 28);
-  console.log(i);
+  if(enemies.length==0){
+    return;
+  }
+  var i=Math.floor(Math.random() * enemies.length);
   enemyWeapon.push(
     {left: enemies[i].left,
      top: enemies[i].top}
      );
-    // console.log(enemies[i].left,enemies[i].top);
 }
 function updateEweapon(){
   document.getElementById("enemy-weapons").innerHTML = "";
@@ -289,6 +303,9 @@ function moveEweapon(){
     for (i = 0; i < enemyWeapon.length; i++) {
         if(enemyWeapon[i].left >= -40){
             enemyWeapon[i].left -= 10;  
+        }
+        else{
+          enemyWeapon.splice(i,1);
         }
     }
 }

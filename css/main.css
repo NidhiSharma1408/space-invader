@@ -6,7 +6,7 @@
 }
 
 #menu_bg {
-  background-image: url("../images/bg1.png");
+  background-image: url("../images/background.gif");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -64,9 +64,11 @@ a {
 #background {
   height: 100vh;
   width: 100vw;
-  background-image: url("../images/background.png");
-  background-size: cover;
+  background-image: url("../images/background.jpg");
+  /* background-size: cover; */
   position: relative;
+   background-repeat: repeat-x;
+   animation: animatedBackground 10s linear infinite; 
 }
 
 #status {
@@ -81,6 +83,7 @@ a {
 #lives,
 #score,#level {
   padding: 5px;
+  color: white;
 }
 
 #ship {
@@ -99,10 +102,10 @@ a {
 
 .weapon {
   background-image: url("../images/missile1.png");
-
+  background-size: cover;
   background-repeat: no-repeat;
-  width: 40px;
-  height: 7px;
+  width: 42px;
+  height: 15px;
   position: absolute;
 }
 .enemy {
@@ -116,6 +119,15 @@ a {
 background-image: url("../images/missile2.png");
 background-repeat: no-repeat;
 position: absolute;
-height: 7px;
-width: 40px;
+height: 15px;
+background-size: cover;
+width: 42px;
+}
+@keyframes animatedBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
 }
