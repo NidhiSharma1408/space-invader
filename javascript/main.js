@@ -66,7 +66,9 @@ function createEnemy() {
     var l = document.getElementById("enemies").clientWidth - 50;
     var t = 10;
     for (var i = 0; i < 28; i++) {
-      alien.play();
+      if(level>1){
+        alien.play();
+      }
       enemies.push({ left: l, top: t });
       t += 70;
       if (t >= document.getElementById("enemies").clientHeight - 120) {
@@ -148,7 +150,7 @@ function moveMeteor() {
   var i;
   for (i = 0; i < meteors.length; i++) {
     if (meteors[i].top <= document.documentElement.clientHeight) {
-      meteors[i].top += 0.5;
+      meteors[i].top += 0.3;
     } else {
       meteors.splice(i, 1);
     }
@@ -496,6 +498,7 @@ function loop() {
   moveMeteor();
   hitEnemiesWithBullets();
   hitByEnemies();
+  WWcollision();
   moveEweapon();
   updateStatus();
   captureBonus();
@@ -536,3 +539,20 @@ var shootInterval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
 setInterval(power_ups, 2000);
+function WWcollision(){
+  for(i = 0 ; i< weapons.length; i++){
+    for(j = 0; j<enemyWeapon.length;j++){
+      if(
+        enemyWeapon[j].top+15 >= weapons[i].top && enemyWeapon[j].top <= weapons[i].top+15 && 
+        enemyWeapon[j].left+42 >= weapons[i].left && enemyWeapon[j].left <= weapons[i].left+42
+      ){
+        explosion.play();
+        enemyWeapon.splice(j,1);
+        weapons.splice(i,1);
+        score +=2; 
+        break;
+      }
+
+    }
+  }
+}
