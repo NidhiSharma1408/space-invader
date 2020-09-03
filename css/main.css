@@ -46,9 +46,30 @@
   color: #ffffff;
 }
 
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.effect {
+  margin: 0 50px;
+}
+
+img {
+  width: 50px;
+  float: left;
+  margin-left: 140px;
+  margin-right: -50px;
+}
+
+p {
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 ul {
   margin-top: 10px;
-  list-style-image: url("../images/hero.png");
 }
 
 ul li {
@@ -73,7 +94,7 @@ a {
   height: 100vh;
   width: 100vw;
   background-image: url("../images/background.jpg");
-   /* background-size: cover;  */
+  /* background-size: cover;  */
   position: relative;
   background-repeat: repeat;
   animation: animatedBackground 10s linear infinite reverse;
@@ -90,7 +111,8 @@ a {
 
 #lives,
 #score,
-#level,#bullets {
+#level,
+#bullets {
   padding: 5px;
   color: white;
 }
@@ -145,10 +167,10 @@ a {
 }
 
 .meteor {
-  background-image: url("../images/meteor1.png");
+  background-image: url("../images/meteor3.png");
   background-repeat: no-repeat;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   position: absolute;
 }
 
@@ -161,27 +183,30 @@ a {
   background-image: url("../images/fuel.png");
   z-index: 1;
 }
-#game-over{
+#game-over {
   height: 100vh;
   width: 100vw;
   visibility: hidden;
   z-index: 5;
   background-image: url("../images/background.gif");
   background-size: cover;
-  position : fixed;
-  top:0;
+  position: fixed;
+  top: 0;
   left: 0;
-
 }
-#game-over h1{
+#game-over h1 {
   margin: 20vh 0;
   text-align: center;
   color: white;
   text-transform: uppercase;
   font-size: 100px;
 }
-#game-over ul{
+#game-over ul {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+span {
+  color: rgba(255, 0, 0, 1);
 }
