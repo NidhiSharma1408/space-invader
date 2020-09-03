@@ -20,7 +20,7 @@ var enemies = [];  //enemies
 var enemyWeapon=[];//weapon or bullets of enemies 
 var power=[]//power ups
 var delay = false;
-var bullets = 42;
+var bullets = 30;
 
 //----creating enemies in html----
 function updateEnemy() {
@@ -399,7 +399,7 @@ function loop() {
   updateStatus();
   captureBonus();
   updatePower();
-  if(lives==0)
+  if(lives<=0)
     GameOver();
   if(level_cleared()){
     createEnemy();
