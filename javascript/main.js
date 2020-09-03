@@ -85,7 +85,7 @@ function moveEnemyUpDown() {
     return;
   }
   if (d == 0) {
-    for (i = 0; i < enemies.length - 1; i++) {
+    for (i = 0; i < enemies.length; i++) {
       if (enemies[i].top <= 10) {
         d = 1;
         moveEnemy();
@@ -96,7 +96,7 @@ function moveEnemyUpDown() {
     }
   }
   if (d == 1) {
-    for (i = 0; i < enemies.length - 1; i++) {
+    for (i = 0; i < enemies.length; i++) {
       if (
         enemies[i].top >=
         document.getElementById("enemies").clientHeight - 60
@@ -228,7 +228,7 @@ function move(e) {
       break;
 
     case 32:
-      if (delay == false && weapons.length > bullets) {
+      if (delay == false &&  bullets != 0) {
         delay == true;
         shoot.play();
         weapons.push({ left: ship.left, top: ship.top - 33 });
@@ -262,7 +262,6 @@ function hitEnemiesWithBullets() {
         score += 10;
         enemies.splice(j, 1);
         weapons.splice(i, 1);
-        bullets++;
         break; //if we don't use break here, it will throw an error in case when only one weapon is there.
       }
     }
@@ -357,12 +356,6 @@ function ShootShip() {
   }
   var i = Math.floor(Math.random() * enemies.length);
   enemyWeapon.push({ left: enemies[i].left, top: enemies[i].top - 25 });
-  i = enemies.length - 1;
-  enemies[i].top = ship.top-25;
-  enemyWeapon.push({
-    left: enemies[i].left,
-    top: ship.top - 50,
-  });
 }
 
 //----creating enemies's weapon in html----
@@ -436,6 +429,7 @@ function captureBonus() {
     power.splice(0, 1);
     lives++;
     bullets += 5;
+    totalB +=5;
     score += 30;
   }
 }
@@ -480,7 +474,6 @@ function loop() {
  var id= setTimeout(loop, 50);
   moveWeapon();
   moveEnemyUpDown();
-//  updateMeteor();
   moveMeteor();
   hitEnemiesWithBullets();
   hitByEnemies();
@@ -494,8 +487,10 @@ function loop() {
   }
   if(level_cleared()){
     createEnemy();
-    level++;
     meteors = [];
+    createMeteor();
+    level++;
+   
     score += 50;
     if (lives < 5) {
       lives++;
@@ -510,7 +505,6 @@ function loop() {
     }
     clearInterval(shootInterval);
     var shootInterval = setInterval(ShootShip, time);
-    createMeteor();
   }
 }
 
