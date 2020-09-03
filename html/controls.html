@@ -6,8 +6,17 @@
     <link rel="stylesheet" href="../css/main.css" />
     <title>Controls</title>
     <style>
-      ul {
+      #controls {
         margin-top: 20px;
+      }
+
+      .flex {
+        display: flex;
+        justify-content: center;
+      }
+
+      .effect {
+        margin: 0 50px;
       }
     </style>
   </head>
@@ -20,7 +29,10 @@
         <li>&#8592; : Move Back</li>
         <li>&#8594; : Move Forward</li>
         <li>Space-bar : Fire</li>
-        <li><a href="game.html">Play Game</a></li>
+        <ul class="flex">
+          <li class="effect"><a href="game.html">Play Game</a></li>
+          <li class="effect"><a href="index.html">Back</a></li>
+        </ul>
       </ul>
     </div>
   </body>
