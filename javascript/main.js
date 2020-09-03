@@ -28,15 +28,6 @@ var enemyWeapon = []; //weapon or bullets of enemies
 var power = []; //power ups
 var delay = false;
 var bullets = 30;
-
-var lives = 5;
-var score = 0;
-var d = 0;
-var time = 2000;
-var level = 1;
-var weapons = [];
-var enemies = [];
-var enemyWeapon = [];
 var meteors = [];
 
 //----creating enemies in html----
@@ -67,6 +58,9 @@ function moveEnemy() {
 
 //----setting initial position of enemies----
 function createEnemy() {
+  if(lives<=0){
+    return;
+  }else{
   var l = document.getElementById("enemies").clientWidth - 50;
   var t = 10;
   for (var i = 1; i <= 28; i++) {
@@ -78,6 +72,7 @@ function createEnemy() {
       l += 70;
     }
   }
+  }
 }
 
 /*function to set the path of enemies:
@@ -86,6 +81,9 @@ function createEnemy() {
  -> move enemies forward when any of them touches the bottom or top
 */
 function moveEnemyUpDown() {
+  if(lives<=0){
+    return;
+  }
   if (d == 0) {
     for (i = 0; i < enemies.length - 1; i++) {
       if (enemies[i].top <= 10) {
@@ -114,15 +112,18 @@ function moveEnemyUpDown() {
   updateEnemy();
 }
 function createMeteor() {
+  if(lives<=0){
+    return;
+  }
   var t = 10;
-  var l = 150;
+  var l = 100;
   var i;
   for (i = 1; i <= 40; i++) {
     meteors.push({ left: l, top: t });
     l += 200;
     if (l >= document.documentElement.clientWidth - 100) {
       t += 150;
-      l = 200;
+      l = 150;
     }
   }
 }
@@ -144,11 +145,12 @@ function moveMeteor() {
   var i;
   for (i = 0; i < meteors.length; i++) {
     if (meteors[i].top <= document.documentElement.clientHeight) {
-      meteors[i].top += 0.2;
+      meteors[i].top += 0.5;
     } else {
       meteors.splice(i, 1);
     }
   }
+  updateMeteor();
 }
 
 //----creating weapons in html----
@@ -185,6 +187,9 @@ function updateShip() {
 }
 
 function move(e) {
+  if(lives<=0){
+    return;
+  }
   switch (e.keyCode) {
     case 37:
       if (ship.left <= 10) {
@@ -223,7 +228,7 @@ function move(e) {
       break;
 
     case 32:
-      if (delay == false && weapons.length < bullets) {
+      if (delay == false && weapons.length > bullets) {
         delay == true;
         shoot.play();
         weapons.push({ left: ship.left, top: ship.top - 33 });
@@ -233,7 +238,6 @@ function move(e) {
           delay = false;
         });
       }
-
       break;
   }
 }
@@ -274,6 +278,9 @@ if so:
 */
 function hitByEnemies() {
   //check if enemy hit the ship.
+  if(lives<=0){
+    return;
+  }
   for (var j = 0; j < enemies.length; j++) {
     if (
       ship.left < enemies[j].left + 50 &&
@@ -320,7 +327,7 @@ function hitByEnemies() {
 //----respawning ship at its initial position after being attacked----
 function respawn() {
   explosion.play();
-  ship.left = 0;
+  ship.left = 10;
   ship.top = document.documentElement.clientHeight / 2 - 25;
   power_ups();
 }
@@ -341,6 +348,9 @@ function level_cleared() {
 
 //----random enemy will shoot the ship.----
 function ShootShip() {
+  if(lives<=0){
+    return;
+  }
   //no shooting when there is no enemy
   if (enemies.length == 0) {
     return;
@@ -348,10 +358,10 @@ function ShootShip() {
   var i = Math.floor(Math.random() * enemies.length);
   enemyWeapon.push({ left: enemies[i].left, top: enemies[i].top - 25 });
   i = enemies.length - 1;
-  enemies[i].top = ship.top;
+  enemies[i].top = ship.top-25;
   enemyWeapon.push({
     left: enemies[i].left,
-    top: ship.top - 25,
+    top: ship.top - 50,
   });
 }
 
@@ -398,7 +408,10 @@ function GameOver() {
   if (score > localStorage.getItem("highScore")) {
     localStorage.setItem("highScore", score);
   }
-  window.location.href = "end.html";
+  document.getElementById("player_score").innerHTML =
+  "Your Score: " + localStorage.getItem("score");
+  document.getElementById('game-over').style.visibility= 'visible';
+  
 }
 
 //----returns random number between a given range----
@@ -408,6 +421,9 @@ function getRandomNum(min, max) {
 
 //---if ship catches the bonus then increase life and score---
 function captureBonus() {
+  if(lives<=0){
+    return;
+  }
   if (power.length == 0) {
     return;
   }
@@ -437,6 +453,9 @@ function updatePower() {
 }
 //----create power ups and updates them----
 function power_ups() {
+  if(lives<=0){
+    return;
+  }
   if (power.length != 0) {
     power.splice(0, 1);
   }
@@ -458,11 +477,10 @@ function power_ups() {
 
 //----game control function---
 function loop() {
-  setTimeout(loop, 50);
+ var id= setTimeout(loop, 50);
   moveWeapon();
   moveEnemyUpDown();
-  updateEnemy();
-  updateMeteor();
+//  updateMeteor();
   moveMeteor();
   hitEnemiesWithBullets();
   hitByEnemies();
@@ -470,8 +488,10 @@ function loop() {
   updateStatus();
   captureBonus();
   updatePower();
-  if(lives<=0)
+  if(lives<=0){
+    clearInterval(id);
     GameOver();
+  }
   if(level_cleared()){
     createEnemy();
     level++;
@@ -484,10 +504,12 @@ function loop() {
     bullets = bullets+28;
     weapons.splice(0,weapons.length);
     updateWeapon();
-    if(time == 250)
+    if(time <= 500){
+      clearInterval(id);
       GameOver();
-    clearInterval(interval);
-    var interval = setInterval(ShootShip, time);
+    }
+    clearInterval(shootInterval);
+    var shootInterval = setInterval(ShootShip, time);
     createMeteor();
   }
 }
@@ -497,7 +519,7 @@ updateShip();
 createEnemy();
 createMeteor();
 
-var interval = setInterval(ShootShip, time);
+var shootInterval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
 setInterval(power_ups, 2000);

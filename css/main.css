@@ -41,6 +41,7 @@
 }
 
 #player_score {
+  text-align: center;
   font-size: 2rem;
   color: #ffffff;
 }
@@ -159,4 +160,28 @@ a {
   position: absolute;
   background-image: url("../images/fuel.png");
   z-index: 1;
+}
+#game-over{
+  height: 100vh;
+  width: 100vw;
+  visibility: hidden;
+  z-index: 5;
+  background-image: url("../images/background.gif");
+  background-size: cover;
+  position : fixed;
+  top:0;
+  left: 0;
+
+}
+#game-over h1{
+  margin: 20vh 0;
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  font-size: 100px;
+}
+#game-over ul{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
