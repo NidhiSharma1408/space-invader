@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/main.css" />
+    <script
+      src="https://kit.fontawesome.com/0963438a4d.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Space Invaders</title>
     <style>
       ul {
-        margin-top: 100px;
+        margin-top: 50px;
       }
     </style>
   </head>
@@ -16,10 +20,20 @@
       <div id="title">SPACE INVADERS</div>
       <p><q>It's about setting milestones, not just surviving the game.</q></p>
       <div id="highScore"></div>
+      <div id="highestLevel"></div>
       <ul>
-        <li class="effect"><a href="game.html">Play Game</a></li>
-        <li class="effect"><a href="controls.html">Controls</a></li>
-        <li class="effect"><a href="instructions.html">Instructions</a></li>
+        <li class="effect">
+          <i class="fas fa-space-shuttle"></i>
+          <a href="game.html"> Play Game</a>
+        </li>
+        <li class="effect">
+          <i class="fas fa-space-shuttle"></i
+          ><a href="controls.html"> Controls</a>
+        </li>
+        <li class="effect">
+          <i class="fas fa-space-shuttle"></i
+          ><a href="instructions.html"> Instructions</a>
+        </li>
       </ul>
       <audio id="theme_song" autoplay loop>
         <source src="../sounds/theme1.mp3" type="audio/mpeg" />
@@ -28,7 +42,12 @@
     <script src="../javascript/main.js"></script>
     <script>
       document.getElementById("highScore").innerHTML =
-        "High Score: " + localStorage.getItem("highScore");
+        "High Score : " + localStorage.getItem("highScore");
+
+      document.getElementById("highestLevel").innerHTML =
+        "Highest Level Reached : " +
+        localStorage.getItem("highestLevel") +
+        " / 10";
     </script>
   </body>
 </html>

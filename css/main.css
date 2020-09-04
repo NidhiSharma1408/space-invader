@@ -12,23 +12,32 @@
 }
 #container {
   position: absolute;
-  top: 15%;
+  top: 10%;
   left: 25%;
   width: 50vw;
-  height: 70vh;
+  height: fit-content;
   border: 2px double #ffffff;
 }
 
 #title {
   font-size: 4.5rem;
   text-align: center;
-  color: #ffffff;
+  color: rgba(255, 0, 0, 0.6);
+  font-weight: 600;
 }
 
 #highScore {
-  font-size: 3rem;
+  font-size: 2.7rem;
   margin-top: 30px;
   margin-bottom: -50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+#highestLevel {
+  font-size: 2.7rem;
+  margin-top: 70px;
+  margin-bottom: 30px;
   text-align: center;
   color: #ffffff;
 }
@@ -46,6 +55,11 @@
   color: #ffffff;
 }
 
+#player_level {
+  text-align: center;
+  font-size: 2rem;
+  color: #ffffff;
+}
 .flex {
   display: flex;
   justify-content: center;
@@ -83,11 +97,26 @@ a {
   text-decoration: none;
 }
 
+.effect:hover i {
+  animation: spin 1s linear infinite;
+  color: blue;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .effect {
-  transition: font-size 1s;
+  transition: font-size 1s, font-weight 1s;
 }
 .effect:hover {
   font-size: 3rem;
+  font-weight: 500;
 }
 
 #background {
@@ -149,6 +178,14 @@ a {
   height: 50px;
   position: absolute;
 }
+.boss {
+  background-image: url("../images/boss.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+}
 .enemy-weapon {
   background-image: url("../images/missile2.png");
   background-repeat: no-repeat;
@@ -173,7 +210,6 @@ a {
   height: 30px;
   position: absolute;
 }
-
 #power_ups {
   width: 50px;
   height: 50px;
@@ -184,20 +220,21 @@ a {
   z-index: 1;
 }
 #game-over {
-  height: 100vh;
-  width: 100vw;
+  border: 2px solid white;
+  height: fit-content;
+  width: fit-content;
   visibility: hidden;
   z-index: 5;
   background-image: url("../images/background.gif");
   background-size: cover;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 25%;
+  left: 25%;
 }
 #game-over h1 {
-  margin: 20vh 0;
+  margin: 10px;
   text-align: center;
-  color: white;
+  color: rgba(255, 0, 0, 0.6);
   text-transform: uppercase;
   font-size: 100px;
 }
@@ -205,6 +242,7 @@ a {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 10px;
 }
 
 span {
