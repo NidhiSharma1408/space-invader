@@ -12,10 +12,10 @@
 }
 #container {
   position: absolute;
-  top: 15%;
+  top: 10%;
   left: 25%;
   width: 50vw;
-  height: 70vh;
+  height: fit-content;
   border: 2px double #ffffff;
 }
 
@@ -149,6 +149,14 @@ a {
   height: 50px;
   position: absolute;
 }
+.boss{
+  background-image: url("../images/boss.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+}
 .enemy-weapon {
   background-image: url("../images/missile2.png");
   background-repeat: no-repeat;
@@ -173,7 +181,6 @@ a {
   height: 30px;
   position: absolute;
 }
-
 #power_ups {
   width: 50px;
   height: 50px;
@@ -184,18 +191,19 @@ a {
   z-index: 1;
 }
 #game-over {
-  height: 100vh;
-  width: 100vw;
+  border: 2px solid white;
+  height: fit-content;
+  width: fit-content;
   visibility: hidden;
   z-index: 5;
   background-image: url("../images/background.gif");
   background-size: cover;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 25%;
+  left: 25%;
 }
 #game-over h1 {
-  margin: 20vh 0;
+  margin: 10px;
   text-align: center;
   color: white;
   text-transform: uppercase;
@@ -205,6 +213,7 @@ a {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 10px;
 }
 
 span {

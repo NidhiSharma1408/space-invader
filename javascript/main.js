@@ -37,6 +37,15 @@ function updateEnemy() {
   document.getElementById("enemies").innerHTML = "";
   var i;
   for (i = 0; i < enemies.length; i++) {
+    if(i==enemies.length-1){
+      document.getElementById("enemies").innerHTML +=
+      "<div class='enemy boss' style='left:" +
+      enemies[i].left +
+      "px; top:" +
+      enemies[i].top +
+      "px;'></div>";
+      break;
+    }
     document.getElementById("enemies").innerHTML +=
       "<div class='enemy' style='left:" +
       enemies[i].left +
@@ -44,6 +53,7 @@ function updateEnemy() {
       enemies[i].top +
       "px;'></div>";
   }
+
 }
 
 //----move enemies in forward direction and remove them once they cross the screen----
@@ -89,7 +99,7 @@ function moveEnemyUpDown() {
     return;
   }
   if (d == 0) {
-    for (var i = 0; i < enemies.length; i++) {
+    for (var i = 0; i < enemies.length -1; i++) {
       if (enemies[i].top <= 10) {
         d = 1;
         moveEnemy();
@@ -100,7 +110,7 @@ function moveEnemyUpDown() {
     }
   }
   if (d == 1) {
-    for (var i = 0; i < enemies.length; i++) {
+    for (var i = 0; i < enemies.length -1; i++) {
       if (
         enemies[i].top >=
         document.getElementById("enemies").clientHeight - 60
@@ -362,9 +372,10 @@ function ShootShip() {
   var i = Math.floor(Math.random() * enemies.length);
   enemyWeapon.push({ left: enemies[i].left, top: enemies[i].top - 25 });
   i = enemies.length - 1;
+  enemies[i].top = ship.top-50;
   enemyWeapon.push({
     left: enemies[i].left,
-    top: ship.top - 50,
+    top: enemies[i].top + 20,
   });
 
 }
@@ -546,6 +557,7 @@ function WWcollision(){
         enemyWeapon[j].top+15 >= weapons[i].top && enemyWeapon[j].top <= weapons[i].top+15 && 
         enemyWeapon[j].left+42 >= weapons[i].left && enemyWeapon[j].left <= weapons[i].left+42
       ){
+        bullets++;
         explosion.play();
         enemyWeapon.splice(j,1);
         weapons.splice(i,1);
