@@ -33,9 +33,14 @@
         <li class="effect"><a href="../html/index.html">Menu</a></li>
       </ul>
     </div>
+    <audio id="theme_song" autoplay loop>
+      <source src="../sounds/theme1.mp3" type="audio/mpeg" />
+    </audio>
+
     <script>
       document.getElementById("player_score").innerHTML =
         "Your Score: " + localStorage.getItem("score");
     </script>
+    <script src="../javascript/main.js"></script>
   </body>
 </html>

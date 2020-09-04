@@ -1,3 +1,7 @@
+window.onload = function () {
+  document.getElementById("theme_song").play();
+};
+
 /*setting the heigth of <div> that will contain enemies, weapon of ship, weapon of enemy.
  '54 px in the height of container that shows score,lives and levels*/
 document.querySelector("#enemies").style.height =
@@ -10,8 +14,8 @@ document.querySelector("#enemy-weapons").style.height =
 var shoot = new Audio("../sounds/shoot.wav");
 var explosion = new Audio("../sounds/explosion.wav");
 var alien = new Audio("../sounds/ufo.wav");
-var kill = new Audio("../sounds/invaderkilled.wav");
-
+var kill = new Audio("../sounds/hit.wav");
+var B_collision = new Audio("../sounds/B_hit.wav");
 //Hero object
 var ship = {
   left: 10,
@@ -66,7 +70,7 @@ function createEnemy() {
     var l = document.getElementById("enemies").clientWidth - 50;
     var t = 10;
     for (var i = 0; i < 28; i++) {
-      if(level>1){
+      if (level > 1) {
         alien.play();
       }
       enemies.push({ left: l, top: t });
@@ -233,7 +237,7 @@ function move(e) {
       break;
 
     case 32:
-      if (delay == false &&  bullets != 0) {
+      if (delay == false && bullets != 0) {
         delay == true;
         shoot.play();
         weapons.push({ left: ship.left, top: ship.top - 33 });
@@ -366,7 +370,6 @@ function ShootShip() {
     left: enemies[i].left,
     top: ship.top - 50,
   });
-
 }
 
 //----creating enemies's weapon in html----
@@ -512,7 +515,7 @@ function loop() {
     meteors = [];
     createMeteor();
     level++;
-   
+
     score += 50;
     if (lives < 5) {
       lives++;
@@ -539,20 +542,21 @@ var shootInterval = setInterval(ShootShip, time);
 document.addEventListener("keydown", move);
 loop();
 setInterval(power_ups, 2000);
-function WWcollision(){
-  for(i = 0 ; i< weapons.length; i++){
-    for(j = 0; j<enemyWeapon.length;j++){
-      if(
-        enemyWeapon[j].top+15 >= weapons[i].top && enemyWeapon[j].top <= weapons[i].top+15 && 
-        enemyWeapon[j].left+42 >= weapons[i].left && enemyWeapon[j].left <= weapons[i].left+42
-      ){
-        explosion.play();
-        enemyWeapon.splice(j,1);
-        weapons.splice(i,1);
-        score +=2; 
+function WWcollision() {
+  for (i = 0; i < weapons.length; i++) {
+    for (j = 0; j < enemyWeapon.length; j++) {
+      if (
+        enemyWeapon[j].top + 15 >= weapons[i].top &&
+        enemyWeapon[j].top <= weapons[i].top + 15 &&
+        enemyWeapon[j].left + 42 >= weapons[i].left &&
+        enemyWeapon[j].left <= weapons[i].left + 42
+      ) {
+        B_collision.play();
+        enemyWeapon.splice(j, 1);
+        weapons.splice(i, 1);
+        score += 2;
         break;
       }
-
     }
   }
 }
