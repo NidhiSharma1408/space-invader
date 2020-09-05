@@ -37,6 +37,7 @@ var enemyWeapon = []; //stores location of enemies's bullets as objects.
 var power = []; //stores power-ups.
 var delay = false;
 var bullets = 30;
+var bonus;
 var meteors = []; //stores location of meteors as objects.
 
 /*function to set initial position of enemies.
@@ -558,7 +559,7 @@ function captureBonus() {
     ship.top + 50 > power[0].top
   ) {
     power.splice(0, 1);
-    if (power[0] == 0) {
+    if (bonus == 0) {
       lives++;
     } else {
       bullets += 5;
@@ -589,6 +590,7 @@ function power_ups() {
   }
   if (getRandomNum(0, 1) == 1) {
     var options = getRandomNum(0, 1);
+    bonus = options;
     power.push({
       left: getRandomNum(
         10,
