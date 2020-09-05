@@ -414,7 +414,7 @@ function bullletToBulletCollision() {
 function respawn() {
   self_explosion.play();
   ship.left = 10;
-  ship.top = document.getElementById("enemies").clientHeight / 2 - 25;
+  ship.top = document.documentElement.clientHeight / 2 - 25;
   power_ups();
 }
 
